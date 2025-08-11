@@ -4,6 +4,7 @@
     justify-content: center;
     align-items: center;
     width: 100%;
+    margin: 2em;
 }
 
 
@@ -30,7 +31,7 @@
     overflow-y: hidden;
     height: auto;
     max-height: 35vh;
-    min-height: 5vh;
+    min-height: 8vh;
     white-space: pre-wrap;
     word-break: break-word;
 }
