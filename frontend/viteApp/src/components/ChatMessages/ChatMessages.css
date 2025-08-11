@@ -31,7 +31,7 @@
     align-self: flex-start;
 }
 
-.message-contant {
+.message-content {
     width: 100%;
     overflow: hidden;
 }
@@ -60,8 +60,48 @@
 
 .assistant-message .message-content table {
     width: 100%;
-    table-layout: fixed; /* Make tables responsive */
+    border-collapse: collapse;
+    margin: 10px 0;
+    background-color: #2d2d2d;
+    border: 1px solid #555;
+    border-radius: 4px;
+    overflow: hidden;
+    table-layout: auto; /* Allow natural column sizing */
+}
+
+.assistant-message .message-content th,
+.assistant-message .message-content td {
+    border: 1px solid #555;
+    padding: 8px 12px;
+    text-align: center; /* Center align all content */
+    color: white;
     word-wrap: break-word;
+    vertical-align: middle; /* Center vertically too */
+    white-space: nowrap; /* Prevent text wrapping in cells */
+}
+
+.assistant-message .message-content th {
+    background-color: #3d3d3d;
+    font-weight: bold;
+    color: #f0f0f0;
+    text-align: center; /* Headers centered */
+}
+
+.assistant-message .message-content td {
+    text-align: center; /* Data cells centered */
+}
+
+/* First column (Food names) can be left-aligned if preferred */
+.assistant-message .message-content td:first-child {
+    text-align: left;
+}
+
+.assistant-message .message-content tr:nth-child(even) {
+    background-color: #262626;
+}
+
+.assistant-message .message-content tr:hover {
+    background-color: #333;
 }
 
 .assistant-message .message-content ul,
@@ -73,11 +113,13 @@
 .assistant-message .message-content li {
     word-wrap: break-word;
     margin: 4px 0;
+    color: white;
 }
 
 .assistant-message .message-content p {
     margin: 8px 0;
     word-wrap: break-word;
+    color: white;
 }
 
 .assistant-message .message-content h1,
@@ -88,7 +130,7 @@
 .assistant-message .message-content h6 {
     word-wrap: break-word;
     margin: 12px 0 8px 0;
-    color: #e0e0e0; /* Lighter color for headings on dark background */
+    color: #e0e0e0;
 }
 
 .assistant-message .message-content blockquote {
@@ -100,6 +142,6 @@
 }
 
 .assistant-message .message-content a {
-    color: #66b3ff; /* Light blue for links on dark background */
-    word-break: break-all; /* Break long URLs */
+    color: #66b3ff;
+    word-break: break-all;
 }

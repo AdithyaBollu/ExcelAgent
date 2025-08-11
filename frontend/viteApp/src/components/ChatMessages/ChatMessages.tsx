@@ -1,5 +1,6 @@
 import "./ChatMessages.css";
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from "remark-gfm";
 
 interface Message {
     role: string;
@@ -29,7 +30,7 @@ const ChatMessages: React.FC<props> = ({ messages }) => {
                     return (
                         <div className="message assistant-message" key={message.content}>
                             <div className="message-content">
-                                <ReactMarkdown>{message.content}</ReactMarkdown>
+                                <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown>
                             </div>
                         </div>
                     );
