@@ -1,0 +1,105 @@
+.messages-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    height: 90%;
+    overflow-y: auto;
+    padding: 40px;
+}
+
+.message {
+    padding: 10px;
+    margin: 15px 0 15px 0px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: fit-content;
+    max-width: 85%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.user-message {
+    background-color: #026875;
+    align-self: flex-end;
+}
+
+.assistant-message {
+    background-color: #1f1f1f;
+    align-self: flex-start;
+}
+
+.message-contant {
+    width: 100%;
+    overflow: hidden;
+}
+
+
+
+
+
+/* Markdown-specific fixes for assistant messages */
+.assistant-message .message-content * {
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.assistant-message .message-content pre {
+    white-space: pre-wrap; /* Allow code blocks to wrap */
+    overflow-x: auto; /* Add horizontal scroll if needed */
+    max-width: 100%;
+}
+
+.assistant-message .message-content code {
+    word-break: break-all; /* Break long code snippets */
+    white-space: pre-wrap;
+}
+
+.assistant-message .message-content table {
+    width: 100%;
+    table-layout: fixed; /* Make tables responsive */
+    word-wrap: break-word;
+}
+
+.assistant-message .message-content ul,
+.assistant-message .message-content ol {
+    padding-left: 20px;
+    margin: 8px 0;
+}
+
+.assistant-message .message-content li {
+    word-wrap: break-word;
+    margin: 4px 0;
+}
+
+.assistant-message .message-content p {
+    margin: 8px 0;
+    word-wrap: break-word;
+}
+
+.assistant-message .message-content h1,
+.assistant-message .message-content h2,
+.assistant-message .message-content h3,
+.assistant-message .message-content h4,
+.assistant-message .message-content h5,
+.assistant-message .message-content h6 {
+    word-wrap: break-word;
+    margin: 12px 0 8px 0;
+    color: #e0e0e0; /* Lighter color for headings on dark background */
+}
+
+.assistant-message .message-content blockquote {
+    border-left: 4px solid #007bff;
+    background-color: rgba(255, 255, 255, 0.1);
+    margin: 12px 0;
+    padding: 8px 16px;
+    word-wrap: break-word;
+}
+
+.assistant-message .message-content a {
+    color: #66b3ff; /* Light blue for links on dark background */
+    word-break: break-all; /* Break long URLs */
+}

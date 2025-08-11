@@ -9,10 +9,12 @@ function App() {
 
   return (
     <>
-      <h1>
-        Hello World!
-      </h1>
-      <Chat/>
+      <div className='container'>
+        {/* <h1>
+          Hello World!
+        </h1> */}
+        <Chat/>
+      </div>
     </>
   )
 }
