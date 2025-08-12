@@ -59,7 +59,7 @@
     font-size: 2em;
     /* letter-spacing: 20px; */
     /* margin-top: 10px; */
-    border: 1px solid #ccc;
+    border: 1px solid #05756c;
 
 }
 
@@ -70,17 +70,20 @@
     align-items: center;
     gap: 10px;
     padding: 20px;
+    box-shadow: 0px 0px 30px rgba(2, 74, 83, 0.5);
 }
 
 .loader span{
     border-radius: 100%;
-    background-color: white;
+    background-color: #05756c;
     width: 0.45rem;
     height: 0.45rem;
     /* display: inline-block; */
 
     animation: bounce-and-blink 1s steps(5, start) infinite;
 }
+
+
 
 @keyframes bounce-and-blink {
     0%, 20%, 50%, 80%, 100% {
