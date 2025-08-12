@@ -10,3 +10,10 @@
     height: 100%;
     width: 100%;
 }
+
+.welcome-message {
+    text-align: center;
+    color: #fff;
+    margin-top: 20px;
+    z-index: 10;
+}

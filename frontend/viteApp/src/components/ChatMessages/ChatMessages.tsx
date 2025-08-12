@@ -10,14 +10,16 @@ interface Message {
 
 type props = {
     messages: Message[];
+    sentMessage?: boolean;
+    generating?: boolean;
 }
 
-const ChatMessages: React.FC<props> = ({ messages }) => {
+const ChatMessages: React.FC<props> = ({ messages, sentMessage, generating }) => {
 
 
     return (
         <>
-        <div className="messages-container">
+        <div className={sentMessage ? "messages-full-container" : "messages-part-container"}>
             
             {messages.map((message) => {
                 if (message.role === 'user') {
@@ -29,6 +31,8 @@ const ChatMessages: React.FC<props> = ({ messages }) => {
                 } else if (message.role === 'assistant') {
                     return (
                         <div className="message assistant-message" key={message.content}>
+                            
+                            
                             <div className="message-content">
                                 <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown>
                             </div>
@@ -36,6 +40,12 @@ const ChatMessages: React.FC<props> = ({ messages }) => {
                     );
                 }
             })}
+            { generating && <div className="message typing-indicator loader">
+                <span></span>
+                <span></span>
+                <span></span>
+                {/* <span>.</span> */}
+            </div> }
         </div>
         </>
     )
