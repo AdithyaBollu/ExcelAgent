@@ -1,6 +1,7 @@
 import requests
 import json
-
+import os
+import tempfile
 
 def read_file(file_path):
     if not file_path:
@@ -18,7 +19,17 @@ def read_file(file_path):
 
 def create_file(file_name, content, extension):
 
-    with open(f"./createdFiles/{file_name}{extension}", "w") as file:
+    # with open(f"./createdFiles/{file_name}{extension}", "w") as file:
+    #     file.write(content)
+
+    path = None
+    with tempfile.NamedTemporaryFile(mode="w", suffix=extension, delete=False) as file:
         file.write(content)
-    
-    return os.path.abspath(f"./createdFiles/{file_name}{extension}")
+        path = file.name
+
+    print(path)
+    return path
+
+
+# if __name__ == "__main__":
+#     create_file("Opa", "Hello World", ".txt")

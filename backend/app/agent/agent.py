@@ -13,7 +13,7 @@ import tempfile
 from .tools.nutrition import get_nutrition_info
 from .tools.weather import get_weather_data
 from .tools.fileIO import read_file, create_file
-from .tools.excelIO import read_excel_file, add_formula_to_excel, write_to_cell
+from .tools.excelIO import create_excel_file, read_excel_file, add_formula_to_excel, write_to_cell
 
 # from openpyxl.pivot.table import PivotTable
 # from openpyxl.chart import Reference
@@ -75,6 +75,10 @@ SYSTEM_PROMPT = {
         3. If the user asks to create a new column use write_to_cell to write the title of the column
         4. If the user asks to write a value to a specific cell, use write_to_cell with the provided parameters
         
+        # IMPORTANT If asked to create an Excel File
+        1. Use create_excel_file
+        2. If asked to do anything with that file use the other tools as normal
+
         You have access to real-time weather data through the get_weather_data function. Always use this tool when weather information is requested.
         
         # Steps:
@@ -204,6 +208,26 @@ tools = [
     {
         "type": "function",
         "function": {
+            "name": "create_excel_file",
+            "description": "Creates a new excel file with the specified name, use this to create new Excel files",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "file_name": {
+                        "type": "string",
+                        "description": "The name of the new excel file to be created"
+                    }
+                },
+                "additionalProperties": False,
+                "required": [
+                    "file_name"
+                ]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
             "name": "read_excel_file",
             "description": "reads an Excel file and returns the valuable cells with their coordinates. Use this to process Excel files.",
             "parameters": {
@@ -305,6 +329,8 @@ tools = [
 def chat_with_nutrition_bot(message, history):
     messages = [SYSTEM_PROMPT]
     file_path_to_return = None
+    file_name_to_return = None
+
 
     # Update previous messages
     for msg in history:
@@ -362,6 +388,7 @@ def chat_with_nutrition_bot(message, history):
                 elif function_name == "create_file":
                     result = create_file(function_args["file_name"], function_args["content"], function_args["extension"])
                     file_path_to_return = result
+                    file_name_to_return = f"{function_args['file_name']}{function_args['extension']}"
                     result = json.dumps({"message": "File created successfully", "file_path": result})
                 elif function_name == "get_weather_data":
                     result = get_weather_data(function_args["location"])
@@ -370,7 +397,11 @@ def chat_with_nutrition_bot(message, history):
                     else:
                         result = json.dumps(result)
                 
-                
+                elif function_name == "create_excel_file":
+                    result = create_excel_file(function_args["file_name"])
+                    file_path_to_return = result
+                    file_name_to_return = f"{function_args['file_name']}.xlsx"
+                    result = json.dumps({"message": "Excel File created successfully", "file_path": result})
                 elif function_name == "read_excel_file":
                     result = read_excel_file(function_args["file_path"])
                 
@@ -382,6 +413,9 @@ def chat_with_nutrition_bot(message, history):
                         function_args["start_row"],
                         function_args["end_row"],
                     )
+
+                    file_path_to_return= file_path
+                    file_name_to_return = os.path.basename(file_path) if file_path else None
                 
                 elif function_name == "write_to_cell":
                     result, file_path = write_to_cell(
@@ -390,6 +424,8 @@ def chat_with_nutrition_bot(message, history):
                         function_args["row"],
                         function_args["value"]
                     )
+                    file_path_to_return= file_path
+                    file_name_to_return = os.path.basename(file_path) if file_path else None
                 
                 messages.append({
                         "role": "tool",
@@ -420,8 +456,14 @@ def chat_with_nutrition_bot(message, history):
     if iteration >= max_iterations:
         bot_response += "\n\n⚠️ Warning: Maximum iterations reached. The response may be incomplete."
 
+    file_info = None
+    if file_path_to_return:
+        file_info = {
+            "path": file_path_to_return,
+            "name": file_name_to_return,
+        }
 
-    return bot_response    
+    return bot_response, file_info
 
 
 

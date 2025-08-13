@@ -2,7 +2,19 @@
 import os
 import openpyxl
 import natsort
+import tempfile
 from openpyxl.utils import get_column_letter
+
+
+def create_excel_file(file_name):
+    wb = openpyxl.Workbook()
+    path=None
+    with tempfile.NamedTemporaryFile(suffix=".xlsx", delete=False) as file:
+        path = file.name
+        wb.save(path)
+    
+    return path
+
 
 def read_excel_file(file_path):
     # Select the active sheet or specify the sheet by name
@@ -35,8 +47,8 @@ def add_formula_to_excel(file_path, column_letter, formula_template, start_row, 
         cell = f"{column_letter}{row}"
         sheet[cell] = formula
     
-    wb.save("./createdFiles/" + os.path.basename(file_path))
-    return f"Formula applied to {column_letter}{start_row}:{column_letter}{end_row} in {file_path}", f"./createdFiles/{os.path.basename(file_path)}"
+    wb.save(file_path)
+    return f"Formula applied to {column_letter}{start_row}:{column_letter}{end_row} in {file_path}", file_path
 
 def write_to_cell(file_path, column, row, value):
     wb = openpyxl.load_workbook(file_path)
@@ -45,5 +57,10 @@ def write_to_cell(file_path, column, row, value):
     cell = f"{column}{row}"
     sheet[cell] = value
     
-    wb.save("./createdFiles/" + os.path.basename(file_path))
-    return f"Value '{value}' written to {cell} in {file_path}", f"./createdFiles/{os.path.basename(file_path)}"
+    wb.save(file_path)
+    return f"Value '{value}' written to {cell} in {file_path}", file_path
+
+
+
+if __name__ == "__main__" :
+    create_excel_file("Hello")

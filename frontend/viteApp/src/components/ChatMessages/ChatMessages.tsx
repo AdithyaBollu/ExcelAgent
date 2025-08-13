@@ -2,9 +2,13 @@ import "./ChatMessages.css";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from "remark-gfm";
 
+import download_file from "../../utils/file_helper";
+
 interface Message {
     role: string;
     content: string;
+    downloadUrl?: string;
+    filename?: string;
 }
 
 
@@ -16,6 +20,15 @@ type props = {
 
 const ChatMessages: React.FC<props> = ({ messages, sentMessage, generating }) => {
 
+    const handleDownload = async (download_url: string, filename: string) => {
+        try {
+            await download_file(download_url, filename);
+            console.log(`Downloaded: ${filename}`);
+        }   
+        catch(error) {
+            console.log("UI Error: ", error);
+        }
+    }
 
     return (
         <>
@@ -31,11 +44,17 @@ const ChatMessages: React.FC<props> = ({ messages, sentMessage, generating }) =>
                 } else if (message.role === 'assistant') {
                     return (
                         <div className="message assistant-message" key={message.content}>
-                            
-                            
                             <div className="message-content">
                                 <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown>
                             </div>
+                            {message.downloadUrl && message.filename && (
+                                <div 
+                                    className="download-btn"
+                                    onClick={() => handleDownload(message.downloadUrl!, message.filename!)}
+                                >
+                                    Download!
+                                </div>
+                            )}
                         </div>
                     );
                 }

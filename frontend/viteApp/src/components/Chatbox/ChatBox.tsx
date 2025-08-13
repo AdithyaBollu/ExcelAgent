@@ -8,6 +8,8 @@ import { useState, useRef, useEffect } from "react";
 interface Message {
     role: string;
     content: string;
+    downloadUrl?: string;
+    filename?: string;
 }
 
 interface ChatBoxProps {
@@ -85,13 +87,23 @@ const ChatBox : React.FC<ChatBoxProps> = ({messages, setMessages, setMessageSent
         const data = await res.json();
         const botMessage: Message = {
           role: "assistant",
-          content: data.response
+          content: data.response,
+          downloadUrl: data.download_url,
+          filename: data.filename,
         };
+
+        if (data.download_url) {
+          console.log(`File available to download! ${data.filename}`)
+        }
+
+
+
         setMessages(prevMessages => [...prevMessages, botMessage]);
         setMessage(""); // Clear the input after sending
          setGenerating(false); // Stop generating state
 
     } catch (error) {
+      setGenerating(false);
       console.error("Error sending message:", error);
     }
 
@@ -145,8 +157,16 @@ const ChatBox : React.FC<ChatBoxProps> = ({messages, setMessages, setMessageSent
       const data = await res.json();
       const botMessage: Message = {
         role: "assistant",
-        content: data.response
+        content: data.response,
+        downloadUrl: data.download_url,
+        filename: data.filename,
       };
+
+      if (data.download_url) {
+        console.log(`File available to download! ${data.filename}`)
+      }
+
+      
       
       setMessages(prevMessages => [...prevMessages, botMessage]);
       setMessage(""); // Clear the input after sending
@@ -157,6 +177,9 @@ const ChatBox : React.FC<ChatBoxProps> = ({messages, setMessages, setMessageSent
 
     } catch (error) {
       console.error("Error sending message with files:", error);
+      setFiles([]);
+      setGenerating(false);
+      setMessage("");
     }
   }
  
