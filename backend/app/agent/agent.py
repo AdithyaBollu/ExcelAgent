@@ -450,8 +450,8 @@ def chat_with_nutrition_bot(message, history):
 
     bot_response = final_response.choices[0].message.content
 
-    if file_path_to_return:
-        bot_response += f"\n\nFile created at: (/file={file_path_to_return})"
+    # if file_path_to_return:
+        # bot_response += f"\n\nFile created at: (/file={file_path_to_return})"
 
     if iteration >= max_iterations:
         bot_response += "\n\n⚠️ Warning: Maximum iterations reached. The response may be incomplete."

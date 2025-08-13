@@ -116,7 +116,7 @@ const ChatBox : React.FC<ChatBoxProps> = ({messages, setMessages, setMessageSent
 
   async function handleSendWithFiles() {
     console.log("Files:", files);
-    // if (message.trim() === "" ) return; // Prevent sending empty messages or without files
+    if (message.trim() === "" ) return; // Prevent sending empty messages or without files
 
     try {
       console.log("Sending message with files:", message, files);
@@ -220,7 +220,7 @@ const ChatBox : React.FC<ChatBoxProps> = ({messages, setMessages, setMessageSent
           
           <div className="tools">
             <button className="sendBtn btn" onClick={() => files.length === 0 ? handleSend() : handleSendWithFiles()}>
-              <img className="send-icon" src={SendIcon} alt="Send" />
+              <img className={message.trim() === "" ? "unclickable" : "send-icon"} src={SendIcon} alt="Send" />
             </button>
             <input type="file" ref={fileRef} onChange={handleFileChange} multiple accept=".pdf,.txt,.csv,.xlsx"style={{ display: 'none' }}/>
             <button onClick={() => fileRef.current ? fileRef.current.click() : ""} className="attachBtn btn">

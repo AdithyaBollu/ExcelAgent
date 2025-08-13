@@ -91,6 +91,19 @@
 }
 
 
+.download-btn {
+    padding: 1em;
+    text-align: center;
+    border: 2px solid #025f6b;
+    background-color: #05756c;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.25s ease-in-out;
+}
+
+.download-btn:hover {
+    background-color: #025f6b;
+}
 
 @keyframes bounce-and-blink {
     0%, 20%, 50%, 80%, 100% {

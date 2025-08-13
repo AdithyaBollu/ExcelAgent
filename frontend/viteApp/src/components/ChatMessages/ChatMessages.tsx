@@ -52,7 +52,7 @@ const ChatMessages: React.FC<props> = ({ messages, sentMessage, generating }) =>
                                     className="download-btn"
                                     onClick={() => handleDownload(message.downloadUrl!, message.filename!)}
                                 >
-                                    Download!
+                                    Download File
                                 </div>
                             )}
                         </div>

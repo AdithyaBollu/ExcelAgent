@@ -116,6 +116,19 @@
 }
 
 
+.unclickable {
+    cursor: none;
+    pointer-events: none;
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: #5f5f5f;
+    padding: 0.5em;
+    border-radius: 0.75em;
+    width: 2rem;
+    height: 2rem;
+}
+
+
 .btn:hover {
     cursor: pointer;
 }
