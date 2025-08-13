@@ -21,6 +21,12 @@
     z-index: 10;
 }
 
+.messages-full-container, .messages-part-container {
+    overflow-y: auto;
+    max-height: 100%;
+    scroll-behavior: smooth;
+}
+
 .message {
     padding: 10px;
     margin: 15px 0 15px 0px;
@@ -39,7 +45,7 @@
 }
 
 .assistant-message {
-    padding-left: 2rem;
+    /* padding-left: 2rem; */
     background-color: #2c2c2c;
     align-self: flex-start;
     /* border: 2px solid #12aa26; */

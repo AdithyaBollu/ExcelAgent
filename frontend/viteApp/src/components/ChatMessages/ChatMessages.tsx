@@ -3,6 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from "remark-gfm";
 
 import download_file from "../../utils/file_helper";
+import { useEffect, useRef } from "react";
 
 interface Message {
     role: string;
@@ -20,6 +21,20 @@ type props = {
 
 const ChatMessages: React.FC<props> = ({ messages, sentMessage, generating }) => {
 
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+    const messagesContainerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages, generating]);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "end",
+        })
+    }
+
     const handleDownload = async (download_url: string, filename: string) => {
         try {
             await download_file(download_url, filename);
@@ -32,7 +47,7 @@ const ChatMessages: React.FC<props> = ({ messages, sentMessage, generating }) =>
 
     return (
         <>
-        <div className={sentMessage ? "messages-full-container" : "messages-part-container"}>
+        <div ref={messagesContainerRef} className={sentMessage ? "messages-full-container" : "messages-part-container"}>
             
             {messages.map((message) => {
                 if (message.role === 'user') {
@@ -65,6 +80,8 @@ const ChatMessages: React.FC<props> = ({ messages, sentMessage, generating }) =>
                 <span></span>
                 {/* <span>.</span> */}
             </div> }
+
+            <div ref={messagesEndRef} />
         </div>
         </>
     )
