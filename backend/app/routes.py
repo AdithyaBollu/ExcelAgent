@@ -68,7 +68,7 @@ def handle_chat_with_files():
 
         enhanced_user_message = f"{user_message} Files: "
         for file in temp_file_paths:
-            enhanced_user_message += f"{file} at {temp_file_paths[file]}, "
+            enhanced_user_message += f"{temp_file_paths[file]}, "
         logging.info(f"Enhanced user message: {enhanced_user_message}")
 
 

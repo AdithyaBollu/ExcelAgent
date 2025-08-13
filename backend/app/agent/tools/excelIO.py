@@ -15,28 +15,50 @@ def create_excel_file(file_name):
     
     return path
 
+def rename_excel_file(file_path, original_name):
+    wb = openpyxl.load_workbook(file_path)
+    wb.save(f"{file_path.split("\\\\")[:-1]}original_name")
+    return original_name
+
+def create_new_sheet(file_path, sheet_name):
+    wb = openpyxl.load_workbook(file_path)
+    wb.create_sheet(sheet_name)
+    wb.save(file_path)
+    return f"Sheet '{sheet_name}' created in {file_path}", file_path
 
 def read_excel_file(file_path):
     # Select the active sheet or specify the sheet by name
     wb = openpyxl.load_workbook(file_path)
-    sheet = wb.active  # or wb['Sheet1']
+    
+    available_sheets = wb.sheetnames
+
 
     # Loop through all rows and cells
-    valuable_cells = []
-    print("valuable cells in the excel file: ", valuable_cells)
-    for row in sheet.iter_rows():
-        for cell in row:
-            if  cell.value:
-                valuable_cells.append(f"{cell.coordinate}: {cell.value}")
+    sheets = {}
+    
+    for sheet in available_sheets:
+        sheet = wb[sheet]  # or wb['Sheet1']
+        valuable_cells = []
+        for row in sheet.iter_rows():
+            for cell in row:
+                if  cell.value:
+                    valuable_cells.append(f"{cell.coordinate}: {cell.value}")
 
-    valuable_cells = natsort.natsorted(valuable_cells)
-    print("valuable cells in the excel file: ", "\n".join(valuable_cells))
-    return "\n".join(valuable_cells)
+        valuable_cells = natsort.natsorted(valuable_cells)
+        sheets[sheet.title] = valuable_cells
+    
+    result = ""
+    for sheet in sheets:
+        result += f"SHEET: {sheet}\n"
+        result += "\n".join(sheets[sheet]) + "\n"
+    print(result)
 
-def add_formula_to_excel(file_path, column_letter, formula_template, start_row, end_row):
+    return result
+
+def add_formula_to_excel(file_path, sheet_name,column_letter, formula_template, start_row, end_row):
     print(f"Adding formula in column {column_letter} from row {start_row} to {end_row}")
     wb = openpyxl.load_workbook(file_path)
-    sheet = wb.active  # or wb['Sheet1']
+    sheet = wb[sheet_name]  # or wb['Sheet1']
     
     if end_row is None:
         end_row = sheet.max_row
@@ -50,9 +72,9 @@ def add_formula_to_excel(file_path, column_letter, formula_template, start_row, 
     wb.save(file_path)
     return f"Formula applied to {column_letter}{start_row}:{column_letter}{end_row} in {file_path}", file_path
 
-def write_to_cell(file_path, column, row, value):
+def write_to_cell(file_path, sheet_name, column, row, value):
     wb = openpyxl.load_workbook(file_path)
-    sheet = wb.active  # or wb['Sheet1']
+    sheet = wb[sheet_name]  # or wb['Sheet1']
     
     cell = f"{column}{row}"
     sheet[cell] = value

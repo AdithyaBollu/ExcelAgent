@@ -43,15 +43,15 @@
     bottom: -1px;
     left: 50%;
     width: 0;
-    height: 2px;
-    background: linear-gradient(to right, transparent, #05756c, transparent);
+    height: 3px;
+    background: linear-gradient(to right, transparent, #025f6b, transparent);
     transition: all 0.25s ease-in-out;
     transform: translateX(-50%);
 }
 
 .tools-container:focus-within{
     transition-delay: 0.1s;
-    box-shadow: 0px 0px 20px rgba(2, 74, 83, 0.5);
+    box-shadow: 0px 0px 20px #025f6b80;
 }
 
 .tools-container:focus-within::after {
@@ -169,7 +169,7 @@
 .file-list-item {
     display: flex;
     gap: 20px;
-    width: 40%;
+    width: fit-content;
     align-items: center;
     justify-content: space-between;
     padding: 10px;

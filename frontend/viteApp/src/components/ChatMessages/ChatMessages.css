@@ -82,13 +82,13 @@
 }
 
 .loader {
-    background-color: #1f1f1f;
+    background-color: #272727;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 10px;
     padding: 20px;
-    box-shadow: 0px 0px 20px rgba(2, 74, 83, 0.5);
+    box-shadow: 0px 0px 20px rgba(0, 225, 255, 0.5);
 }
 
 .loader span{
@@ -107,7 +107,7 @@
     padding: 1em;
     text-align: center;
     border: 2px solid #025f6b;
-    background-color: #05756c;
+    background-color: #01505a;
     border-radius: 10px;
     cursor: pointer;
     transition: all 0.25s ease-in-out;

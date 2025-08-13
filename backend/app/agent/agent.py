@@ -10,11 +10,15 @@ import json
 # import gradio as gr
 import tempfile
 
+import logging
+
 from .tools.nutrition import get_nutrition_info
 from .tools.weather import get_weather_data
 from .tools.fileIO import read_file, create_file
-from .tools.excelIO import create_excel_file, read_excel_file, add_formula_to_excel, write_to_cell
+from .tools.excelIO import create_excel_file, create_new_sheet, read_excel_file, add_formula_to_excel, write_to_cell
 
+
+logging.basicConfig(level=logging.INFO)
 # from openpyxl.pivot.table import PivotTable
 # from openpyxl.chart import Reference
 
@@ -74,10 +78,17 @@ SYSTEM_PROMPT = {
             2. Make sure both start_row and end_row are provided.
         3. If the user asks to create a new column use write_to_cell to write the title of the column
         4. If the user asks to write a value to a specific cell, use write_to_cell with the provided parameters
+        5. If the user asks to create a new sheet, use create_new_sheet with the provided parameters
         
         # IMPORTANT If asked to create an Excel File
         1. Use create_excel_file
         2. If asked to do anything with that file use the other tools as normal
+
+        # IMPORTANT When chaining tool calls related to excel files
+        1. If the previous tool call returned a file path, 
+            always pass in the result of the previous tool call as the file path parameter for the next tool call.
+        
+        
 
         You have access to real-time weather data through the get_weather_data function. Always use this tool when weather information is requested.
         
@@ -258,6 +269,10 @@ tools = [
                         "type": "string",
                         "description": "The path to the Excel file to read. This should be a valid file path on the server where the model is running."
                     },
+                    "sheet_name": {
+                        "type": "string",
+                        "description": "The name of the sheet in the Excel file to modify."
+                    },
                     "column_letter": {
                         "type": "string",
                         "description": "The letter of the column to which the formula will be applied (e.g., 'A', 'B', etc.)."
@@ -279,6 +294,7 @@ tools = [
                 "additionalProperties": False,
                 "required": [
                     "file_path",
+                    "sheet_name",
                     "column_letter",
                     "formula_template",
                     "start_row",
@@ -299,6 +315,10 @@ tools = [
                         "type": "string",
                         "description": "The path to the Excel file to modify. This should be a valid file path on the server where the model is running."
                     },
+                    "sheet_name": {
+                        "type": "string",
+                        "description": "The name of the sheet in the Excel file to modify."
+                    },
                     "column": {
                         "type": "string",
                         "description": "The letter of the column where the value will be written (e.g., 'A', 'B', etc.)."
@@ -315,9 +335,35 @@ tools = [
                 "additionalProperties": False,
                 "required": [
                     "file_path",
+                    "sheet_name",
                     "column",
                     "row",
                     "value"
+                ]
+            }
+        }
+    }, 
+    {
+        "type": "function",
+        "function": {
+            "name": "create_new_sheet",
+            "description": "Creates a new sheet in an Excel file. Use this to add new sheets to Excel files.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "file_path": {
+                        "type": "string",
+                        "description": "The path to the Excel file to modify. This should be a valid file path on the server where the model is running."
+                    },
+                    "sheet_name": {
+                        "type": "string",
+                        "description": "The name of the new sheet to create."
+                    }
+                },
+                "additionalProperties": False,
+                "required": [
+                    "file_path",
+                    "sheet_name"
                 ]
             }
         }
@@ -389,6 +435,7 @@ def chat_with_nutrition_bot(message, history):
                     result = create_file(function_args["file_name"], function_args["content"], function_args["extension"])
                     file_path_to_return = result
                     file_name_to_return = f"{function_args['file_name']}{function_args['extension']}"
+                    logging.info(f"File path to return: {file_path_to_return}")
                     result = json.dumps({"message": "File created successfully", "file_path": result})
                 elif function_name == "get_weather_data":
                     result = get_weather_data(function_args["location"])
@@ -399,6 +446,7 @@ def chat_with_nutrition_bot(message, history):
                 
                 elif function_name == "create_excel_file":
                     result = create_excel_file(function_args["file_name"])
+                    file_path = result
                     file_path_to_return = result
                     file_name_to_return = f"{function_args['file_name']}.xlsx"
                     result = json.dumps({"message": "Excel File created successfully", "file_path": result})
@@ -408,6 +456,7 @@ def chat_with_nutrition_bot(message, history):
                 elif function_name == "add_formula_to_excel":
                     result, file_path = add_formula_to_excel(
                         file_path if file_path else function_args["file_path"],
+                        function_args["sheet_name"],
                         function_args["column_letter"],
                         function_args["formula_template"],
                         function_args["start_row"],
@@ -420,9 +469,18 @@ def chat_with_nutrition_bot(message, history):
                 elif function_name == "write_to_cell":
                     result, file_path = write_to_cell(
                         file_path if file_path else function_args["file_path"],
+                        function_args["sheet_name"],
                         function_args["column"],
                         function_args["row"],
                         function_args["value"]
+                    )
+                    file_path_to_return= file_path
+                    file_name_to_return = os.path.basename(file_path) if file_path else None
+                
+                elif function_name == "create_new_sheet":
+                    result, file_path = create_new_sheet(
+                        file_path if file_path else function_args["file_path"],
+                        function_args["sheet_name"]
                     )
                     file_path_to_return= file_path
                     file_name_to_return = os.path.basename(file_path) if file_path else None
