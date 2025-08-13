@@ -45,8 +45,10 @@ def handle_chat_with_files():
 
         for i in range(file_count):
             file = request.files.get(f'file_{i}')
+            logging.info(f"Processing file: {file.filename if file else 'None'}")
+            extension = Path(file.filename).suffix.lower() if file else ''
                 
-            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+            with tempfile.NamedTemporaryFile(suffix=extension, delete=False) as temp_file:
                 file.save(temp_file.name)
                 logging.info(f"File saved to temporary location: {temp_file.name}")
                 temp_file_paths[file.filename] = temp_file.name

@@ -6,11 +6,15 @@
     width: 100%;
     margin: 2em;
     box-shadow: inset;
+    background-color: transparent;
+    opacity: 1;
+   
 }
 
 
 .tools-container {
-    background-color: #2e2e2e;
+    opacity: 1;
+    /* background-color: transparent; */
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -22,6 +26,7 @@
     padding: 10px;
     transition: 0.25s all ease-in-out;
     position: relative;
+     z-index: 50;
 }
 
 .input-container {
@@ -72,6 +77,7 @@
     min-height: 8vh;
     white-space: pre-wrap;
     word-break: break-word;
+    /* margin-top: 5px; */
 }
 
 .send-icon {
