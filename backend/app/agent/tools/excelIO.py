@@ -58,7 +58,11 @@ def read_excel_file(file_path):
 def add_formula_to_excel(file_path, sheet_name,column_letter, formula_template, start_row, end_row):
     print(f"Adding formula in column {column_letter} from row {start_row} to {end_row}")
     wb = openpyxl.load_workbook(file_path)
-    sheet = wb[sheet_name]  # or wb['Sheet1']
+    sheet = None
+    try:
+        sheet = wb[sheet_name]  # or wb['Sheet1']
+    except KeyError:
+        sheet = wb.create_sheet(sheet_name)
     
     if end_row is None:
         end_row = sheet.max_row
@@ -74,8 +78,12 @@ def add_formula_to_excel(file_path, sheet_name,column_letter, formula_template, 
 
 def write_to_cell(file_path, sheet_name, column, row, value):
     wb = openpyxl.load_workbook(file_path)
-    sheet = wb[sheet_name]  # or wb['Sheet1']
-    
+    sheet = None
+    try:
+        sheet = wb[sheet_name]  # or wb['Sheet1']
+    except KeyError:
+        sheet = wb.create_sheet(sheet_name)
+
     cell = f"{column}{row}"
     sheet[cell] = value
     

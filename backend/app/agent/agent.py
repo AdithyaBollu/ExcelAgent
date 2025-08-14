@@ -80,13 +80,15 @@ SYSTEM_PROMPT = {
         4. If the user asks to write a value to a specific cell, use write_to_cell with the provided parameters
         5. If the user asks to create a new sheet, use create_new_sheet with the provided parameters
         
-        # IMPORTANT If asked to create an Excel File
-        1. Use create_excel_file
-        2. If asked to do anything with that file use the other tools as normal
-
-        # IMPORTANT When chaining tool calls related to excel files
-        1. If the previous tool call returned a file path, 
-            always pass in the result of the previous tool call as the file path parameter for the next tool call.
+        # IMPORTANT If asked to create an Excel File or store to an Excel File:
+        1. Use create_excel_file to create the file
+        2. READ THE EXCEL FILE USING read_excel_file
+        3. If the user asks to add a formula, use add_formula_to_excel with the provided parameters
+            1. For the formula_template argument, the arg is "forumla_template" not "formula_template=".
+            2. Make sure both start_row and end_row are provided.
+        4. If the user asks to create a new column use write_to_cell to write the title of the column
+        5. If the user asks to write a value to a specific cell, use write_to_cell with the provided parameters
+        6. If the user asks to create a new sheet, use create_new_sheet with the provided parameters
         
         
 
