@@ -9,7 +9,7 @@ from openpyxl.utils import get_column_letter
 def create_excel_file(file_name):
     wb = openpyxl.Workbook()
     path=None
-    with tempfile.NamedTemporaryFile(suffix=".xlsx", delete=False) as file:
+    with tempfile.NamedTemporaryFile(prefix=file_name, suffix=".xlsx", delete=False) as file:
         path = file.name
         wb.save(path)
     
@@ -55,7 +55,7 @@ def read_excel_file(file_path):
 
     return result
 
-def add_formula_to_excel(file_path, sheet_name,column_letter, formula_template, start_row, end_row):
+def add_formula_to_excel(file_path, sheet_name, column_letter, formula_template, start_row, end_row):
     print(f"Adding formula in column {column_letter} from row {start_row} to {end_row}")
     wb = openpyxl.load_workbook(file_path)
     sheet = None
